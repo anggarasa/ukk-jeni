@@ -127,4 +127,24 @@ class Pelanggan extends Controller
         header('Location: ' . BASE_URL . '/pelanggan');
         exit;
     }
+
+    public function delete($id)
+    {
+        $pelangganModel = $this->model('PelangganModel'); // Panggil model
+        $result = $pelangganModel->delete($id); // Hapus data berdasarkan ID
+
+        if ($result) {
+            // Set flash message untuk sukses
+            $_SESSION['flash_message'] = 'Data pelanggan berhasil dihapus!';
+            $_SESSION['flash_type'] = 'success';
+        } else {
+            // Set flash message untuk gagal
+            $_SESSION['flash_message'] = 'Gagal menghapus data pelanggan!';
+            $_SESSION['flash_type'] = 'error';
+        }
+
+        // Redirect kembali ke halaman index
+        header('Location: ' . BASE_URL . '/pelanggan');
+        exit;
+    }
 }

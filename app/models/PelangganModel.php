@@ -68,4 +68,12 @@ class PelangganModel
         $result = $this->db->single();
         return $result['jumlah'] > 0; // Return true jika email ditemukan untuk pengguna lain
     }
+
+    public function delete($id)
+    {
+        $query = "DELETE FROM pelanggan WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 }
