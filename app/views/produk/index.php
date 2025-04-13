@@ -78,23 +78,40 @@
         </div>
 
         <!-- Pagination -->
+        <!-- Pagination -->
         <div class="p-4 flex flex-col sm:flex-row items-center justify-between border-t">
-            <div class="mb-4 sm:mb-0">
-                <p class="text-sm text-gray-500">Menampilkan 1-6 dari 248 pelanggan</p>
-            </div>
-            <div class="flex space-x-1">
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-400 cursor-not-allowed">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="px-3 py-1.5 text-sm rounded border border-primary bg-primary text-white">1</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">2</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">3</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">4</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">5</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+            <?php if ($data['total_pages'] > 1): ?>
+                <div class="flex space-x-1">
+                    <!-- Tombol Previous -->
+                    <?php if ($data['current_page'] > 1): ?>
+                        <a href="<?= BASE_URL ?>/produk?page=<?= $data['current_page'] - 1 ?>" class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i> Prev
+                        </a>
+                    <?php else: ?>
+                        <button class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-400 cursor-not-allowed" disabled>
+                            <i class="fas fa-chevron-left"></i> Prev
+                        </button>
+                    <?php endif; ?>
+
+                    <!-- Tombol Halaman -->
+                    <?php for ($i = 1; $i <= $data['total_pages']; $i++): ?>
+                        <a href="<?= BASE_URL ?>/produk?page=<?= $i ?>" class="px-3 py-1.5 text-sm rounded border <?= $data['current_page'] == $i ? 'bg-blue-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-100' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <!-- Tombol Next -->
+                    <?php if ($data['current_page'] < $data['total_pages']): ?>
+                        <a href="<?= BASE_URL ?>/produk?page=<?= $data['current_page'] + 1 ?>" class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-600 hover:bg-gray-100">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <button class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-400 cursor-not-allowed" disabled>
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 

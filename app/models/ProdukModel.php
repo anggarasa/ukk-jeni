@@ -53,4 +53,14 @@ class ProdukModel
         $this->db->bind('stok', $data['stok']);
         return $this->db->execute();
     }
+
+    // ProdukModel.php
+    public function getPaginated($limit, $offset)
+    {
+        $query = "SELECT * FROM produk ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $this->db->query($query);
+        $this->db->bind(':limit', $limit, \PDO::PARAM_INT);
+        $this->db->bind(':offset', $offset, \PDO::PARAM_INT);
+        return $this->db->resultSet();
+    }
 }

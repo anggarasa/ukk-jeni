@@ -2,9 +2,18 @@
 
 class Produk  extends Controller
 {
+    // Produk.php
     public function index()
     {
-        $data['produks'] = $this->model('ProdukModel')->getAll();
+        $limit = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $produkModel = $this->model('ProdukModel');
+        $data['produks'] = $produkModel->getPaginated($limit, $offset);
+        $data['total_pages'] = ceil($produkModel->countAll() / $limit); // Hitung total halaman
+        $data['current_page'] = $page;
+
         $this->view('produk/index', $data);
     }
 
