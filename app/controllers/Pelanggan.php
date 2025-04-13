@@ -152,6 +152,23 @@ class Pelanggan extends Controller
         exit;
     }
 
+    public function detail($id)
+    {
+        $pelanggan = $this->model('PelangganModel')->getById($id);
+
+        if ($pelanggan) {
+            echo json_encode([
+                'status' => 'success',
+                'data' => $pelanggan
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Data pelanggan tidak ditemukan.'
+            ]);
+        }
+    }
+
     public function delete($id)
     {
         $pelangganModel = $this->model('PelangganModel'); // Panggil model

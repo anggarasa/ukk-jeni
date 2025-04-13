@@ -14,7 +14,31 @@
 <?php endif; ?>
 
 <!-- Page Content -->
-<main class="p-4 md:p-6">
+<main x-data="{
+        show: false,
+        pelanggan: null,
+        showModal(id) {
+            this.show = true;
+            this.fetchDetail(id);
+        },
+        fetchDetail(id) {
+            fetch(`<?= BASE_URL ?>/pelanggan/detail/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.pelanggan = data.data;
+                    } else {
+                        alert(data.message);
+                        this.show = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching detail:', error);
+                    alert('Gagal mengambil data pelanggan.');
+                    this.show = false;
+                });
+        }
+    }" class="p-4 md:p-6">
     <!-- Header & Actions -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div>
@@ -72,9 +96,13 @@
                         </td>
                         <td class="p-4">
                             <div class="flex space-x-2">
-                                <button class="p-1.5 bg-blue-50 text-primary rounded hover:bg-blue-100" title="Lihat Detail">
+                                <button class="p-1.5 text-primary rounded hover:bg-blue-100"
+                                        title="Lihat Detail"
+                                        @click="showModal($el.dataset.id)"
+                                        data-id="<?= $pelanggan['id'] ?>">
                                     <i class="fas fa-eye"></i>
                                 </button>
+
                                 <a href="<?= BASE_URL ?>/pelanggan/edit/<?= $pelanggan['id'] ?>" class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -86,6 +114,35 @@
                             </div>
                         </td>
                     </tr>
+
+                    <!-- Modal Detail -->
+                    <div x-show="show"
+                         class="fixed z-50 inset-0 flex items-center justify-center bg-transparent" style="display: none;">
+                        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-lg font-medium text-gray-700">Detail Pelanggan</h2>
+                                <button @click="show = false" class="text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <!-- Isi Modal -->
+                            <div class="space-y-2">
+                                <p><strong>Nama:</strong> <span x-text="pelanggan?.nama || '-'"></span></p>
+                                <p><strong>Email:</strong> <span x-text="pelanggan?.email || '-'"></span></p>
+                                <p><strong>No. Telepon:</strong> <span x-text="pelanggan?.no_hp || '-'"></span></p>
+                                <p><strong>Alamat:</strong> <span x-text="pelanggan?.alamat || '-'"></span></p>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="flex justify-end">
+                                <button @click="show = false" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                    Tutup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
                 </tbody>
             </table>
