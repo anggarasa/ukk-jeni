@@ -76,4 +76,21 @@ class PelangganModel
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
+
+    public function getPaginated($start, $limit)
+    {
+        $query = "SELECT * FROM pelanggan ORDER BY id DESC LIMIT :start, :limit";
+        $this->db->query($query);
+        $this->db->bind(':start', $start, \PDO::PARAM_INT); // Ikat offset dan harus berupa integer
+        $this->db->bind(':limit', $limit, \PDO::PARAM_INT); // Ikat limit dan harus berupa integer
+        return $this->db->resultSet(); // Ambil data
+    }
+
+    public function countAll()
+    {
+        $query = "SELECT COUNT(*) as total FROM pelanggan";
+        $this->db->query($query);
+        $result = $this->db->single(); // Ambil count total data
+        return $result['total']; // Kembalikan total jumlah data
+    }
 }

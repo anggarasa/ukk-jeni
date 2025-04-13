@@ -4,7 +4,21 @@ class Pelanggan extends Controller
 {
     public function index()
     {
-        $data['pelanggans'] = $this->model('PelangganModel')->getAll();
+        $limit = 5; // Jumlah data per halaman
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
+        $start = ($page - 1) * $limit; // Hitung offset
+
+        $pelangganModel = $this->model('PelangganModel');
+
+        // Ambil data dengan batasan halaman
+        $data['pelanggans'] = $pelangganModel->getPaginated($start, $limit);
+
+        // Hitung jumlah halaman
+        $totalData = $pelangganModel->countAll();
+        $data['totalPages'] = ceil($totalData / $limit);
+        $data['currentPage'] = $page;
+
+        // Kirim data ke view
         $this->view('pelanggan/index', $data);
     }
 

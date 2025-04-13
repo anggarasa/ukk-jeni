@@ -92,24 +92,37 @@
         </div>
 
         <!-- Pagination -->
-        <div class="p-4 flex flex-col sm:flex-row items-center justify-between border-t">
-            <div class="mb-4 sm:mb-0">
-                <p class="text-sm text-gray-500">Menampilkan 1-6 dari 248 pelanggan</p>
-            </div>
-            <div class="flex space-x-1">
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 text-gray-400 cursor-not-allowed">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="px-3 py-1.5 text-sm rounded border border-primary bg-primary text-white">1</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">2</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">3</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">4</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">5</button>
-                <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Pagination -->
+        <nav class="mt-6">
+            <ul class="flex justify-center space-x-2">
+                <!-- Tombol Previous -->
+                <?php if ($data['currentPage'] > 1): ?>
+                    <li>
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] - 1 ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
+                            Previous
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <!-- Nomor Halaman -->
+                <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
+                    <li>
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $i ?>" class="px-4 py-2 <?= $i == $data['currentPage'] ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600' ?> rounded hover:bg-gray-300">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+
+                <!-- Tombol Next -->
+                <?php if ($data['currentPage'] < $data['totalPages']): ?>
+                    <li>
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] + 1 ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
+                            Next
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
     </div>
 
     <?php require_once '../app/views/layouts/footer.php'?>
