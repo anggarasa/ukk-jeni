@@ -93,4 +93,27 @@ class PelangganModel
         $result = $this->db->single(); // Ambil count total data
         return $result['total']; // Kembalikan total jumlah data
     }
+
+    public function search($keyword, $start, $limit)
+    {
+        $query = "SELECT * FROM pelanggan 
+              WHERE nama LIKE :keyword OR email LIKE :keyword OR no_hp LIKE :keyword 
+              ORDER BY id DESC 
+              LIMIT :start, :limit";
+        $this->db->query($query);
+        $this->db->bind(':keyword', "%$keyword%");
+        $this->db->bind(':start', $start, \PDO::PARAM_INT);
+        $this->db->bind(':limit', $limit, \PDO::PARAM_INT);
+        return $this->db->resultSet();
+    }
+
+    public function countSearch($keyword)
+    {
+        $query = "SELECT COUNT(*) as total FROM pelanggan 
+              WHERE nama LIKE :keyword OR email LIKE :keyword OR no_hp LIKE :keyword";
+        $this->db->query($query);
+        $this->db->bind(':keyword', "%$keyword%");
+        $result = $this->db->single();
+        return $result['total'];
+    }
 }

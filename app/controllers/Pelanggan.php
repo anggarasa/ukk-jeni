@@ -10,13 +10,23 @@ class Pelanggan extends Controller
 
         $pelangganModel = $this->model('PelangganModel');
 
-        // Ambil data dengan batasan halaman
-        $data['pelanggans'] = $pelangganModel->getPaginated($start, $limit);
+        // Cek apakah ada pencarian
+        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : null;
+
+        if ($keyword) {
+            // Jika ada pencarian, gunakan query pencarian
+            $data['pelanggans'] = $pelangganModel->search($keyword, $start, $limit);
+            $totalData = $pelangganModel->countSearch($keyword);
+        } else {
+            // Jika tidak ada pencarian, gunakan pagination biasa
+            $data['pelanggans'] = $pelangganModel->getPaginated($start, $limit);
+            $totalData = $pelangganModel->countAll();
+        }
 
         // Hitung jumlah halaman
-        $totalData = $pelangganModel->countAll();
         $data['totalPages'] = ceil($totalData / $limit);
         $data['currentPage'] = $page;
+        $data['keyword'] = $keyword;
 
         // Kirim data ke view
         $this->view('pelanggan/index', $data);

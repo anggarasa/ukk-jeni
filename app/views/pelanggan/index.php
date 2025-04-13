@@ -32,12 +32,12 @@
     <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <form id="searchForm" class="flex items-stretch">
+                <form id="searchForm" class="flex items-stretch" method="get" action="<?= BASE_URL ?>/pelanggan">
                     <div class="relative flex-grow">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" id="searchCustomer" name="keyword" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Cari pelanggan...">
+                        <input type="text" id="searchCustomer" name="keyword" value="<?= isset($data['keyword']) ? htmlspecialchars($data['keyword']) : '' ?>" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Cari berdasarkan nama, email, atau No. Telepon...">
                     </div>
                     <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 flex items-center justify-center">
                         <span>Cari</span>
@@ -92,13 +92,12 @@
         </div>
 
         <!-- Pagination -->
-        <!-- Pagination -->
         <nav class="mt-6">
             <ul class="flex justify-center space-x-2">
                 <!-- Tombol Previous -->
                 <?php if ($data['currentPage'] > 1): ?>
                     <li>
-                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] - 1 ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] - 1 ?>&keyword=<?= $data['keyword'] ?? '' ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
                             Previous
                         </a>
                     </li>
@@ -107,7 +106,7 @@
                 <!-- Nomor Halaman -->
                 <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
                     <li>
-                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $i ?>" class="px-4 py-2 <?= $i == $data['currentPage'] ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600' ?> rounded hover:bg-gray-300">
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $i ?>&keyword=<?= $data['keyword'] ?? '' ?>" class="px-4 py-2 <?= $i == $data['currentPage'] ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600' ?> rounded hover:bg-gray-300">
                             <?= $i ?>
                         </a>
                     </li>
@@ -116,7 +115,7 @@
                 <!-- Tombol Next -->
                 <?php if ($data['currentPage'] < $data['totalPages']): ?>
                     <li>
-                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] + 1 ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
+                        <a href="<?= BASE_URL ?>/pelanggan?page=<?= $data['currentPage'] + 1 ?>&keyword=<?= $data['keyword'] ?? '' ?>" class="px-4 py-2 bg-gray-200 text-gray-600 rounded hover:bg-gray-300">
                             Next
                         </a>
                     </li>
