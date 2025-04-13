@@ -54,6 +54,15 @@ class ProdukModel
         return $this->db->execute();
     }
 
+    public function deleteById($id)
+    {
+        $query = "DELETE FROM produk WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind(':id', $id);
+
+        return $this->db->execute();
+    }
+
     // ProdukModel.php
     public function getPaginated($limit, $offset)
     {

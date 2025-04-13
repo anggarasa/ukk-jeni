@@ -135,4 +135,19 @@ class Produk  extends Controller
         }
         exit;
     }
+
+    public function delete($id)
+    {
+        $id = (int)$id; // Pastikan id adalah integer
+        $produkModel = $this->model('ProdukModel');
+
+        if ($produkModel->deleteById($id)) {
+            $_SESSION['success_message'] = 'Produk berhasil dihapus!';
+        } else {
+            $_SESSION['error_message'] = 'Terjadi kesalahan saat menghapus produk.';
+        }
+
+        header('Location: ' . BASE_URL . '/produk');
+        exit;
+    }
 }

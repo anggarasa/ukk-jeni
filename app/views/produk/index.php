@@ -24,7 +24,7 @@
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" id="searchProduk" name="keyword" value="<?= isset($data['keyword']) ? htmlspecialchars($data['keyword']) : '' ?>" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Cari berdasarkan nama_produk, harga, stok, atau terjual">
+                        <input type="text" id="searchProduk" name="keyword" value="<?= isset($data['keyword']) ? htmlspecialchars($data['keyword']) : '' ?>" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Cari berdasarkan nama produk, harga, stok, atau terjual">
                     </div>
                     <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 flex items-center justify-center">
                         <span>Cari</span>
@@ -72,9 +72,10 @@
                             <a href="<?= BASE_URL ?>/produk/edit/<?= $produk['id'] ?>" class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <button class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Hapus">
+                            <a href="<?= BASE_URL ?>/produk/delete/<?= $produk['id'] ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Hapus">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
+                            </a>
+
                         </div>
                     </td>
                 </tr>
@@ -119,5 +120,16 @@
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick]')) {
+                const message = e.target.getAttribute('onclick').match(/return confirm\('([^']+)'\)/)[1];
+                if (!confirm(message)) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
 
 <?php require_once '../app/views/layouts/footer.php'?>
