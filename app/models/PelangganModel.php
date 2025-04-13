@@ -38,4 +38,34 @@ class PelangganModel
 
         return $result['jumlah'] > 0; // Kembalikan true jika email sudah ada
     }
+
+    public function getById($id)
+    {
+        $this->db->query("SELECT * FROM pelanggan WHERE id = :id");
+        $this->db->bind(':id', $id); // Bind parameter untuk keamanan
+        return $this->db->single(); // Ambil satu baris hasil
+    }
+
+    public function update($id, $data)
+    {
+        $query = "UPDATE pelanggan SET nama = :nama, email = :email, no_hp = :no_hp, alamat = :alamat WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind(':nama', $data['nama']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':no_hp', $data['no_hp']);
+        $this->db->bind(':alamat', $data['alamat']);
+        $this->db->bind(':id', $id);
+
+        return $this->db->execute();
+    }
+
+    public function isEmailExistForOtherUser($email, $id)
+    {
+        $query = "SELECT COUNT(*) as jumlah FROM pelanggan WHERE email = :email AND id != :id";
+        $this->db->query($query);
+        $this->db->bind(':email', $email);
+        $this->db->bind(':id', $id);
+        $result = $this->db->single();
+        return $result['jumlah'] > 0; // Return true jika email ditemukan untuk pengguna lain
+    }
 }
