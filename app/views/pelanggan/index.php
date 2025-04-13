@@ -1,5 +1,18 @@
 <?php require_once '../app/views/layouts/header.php'?>
 
+<?php if (isset($_SESSION['flash_message'])): ?>
+    <div id="flashModal" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 space-y-4">
+            <h2 class="text-lg font-medium <?= $_SESSION['flash_type'] === 'success' ? 'text-green-600' : 'text-red-600' ?>">
+                <?= $_SESSION['flash_type'] === 'success' ? 'Sukses' : 'Gagal' ?>
+            </h2>
+            <p><?= $_SESSION['flash_message'] ?></p>
+            <button onclick="document.getElementById('flashModal').remove();" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Tutup</button>
+        </div>
+    </div>
+    <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
+<?php endif; ?>
+
 <!-- Page Content -->
 <main class="p-4 md:p-6">
     <!-- Header & Actions -->
@@ -9,10 +22,10 @@
             <p class="text-gray-600">Kelola dan temukan semua data pelanggan</p>
         </div>
 
-        <button id="btnAddCustomer" class="flex items-center justify-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600">
+        <a href="<?= BASE_URL ?>/pelanggan/tambah" class="flex items-center justify-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600">
             <i class="fas fa-user-plus mr-2"></i>
             <span>Tambah Pelanggan</span>
-        </button>
+        </a>
     </div>
 
     <!-- Search & Filter Section -->
@@ -44,34 +57,34 @@
                     <th class="p-4 font-medium">Email</th>
                     <th class="p-4 font-medium">No. Telepon</th>
                     <th class="p-4 font-medium">Alamat</th>
-                    <th class="p-4 font-medium">Terdaftar</th>
                     <th class="p-4 font-medium">Aksi</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y">
                 <!-- Customer Row 1 -->
-                <tr class="hover:bg-gray-50">
-                    <td class="p-4">Jeni islam</td>
-                    <td class="p-4">Jeni@gmail.com</td>
-                    <td class="p-4">0812-3456-7890</td>
-                    <td class="p-4">
-                     lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </td>
-                    <td class="p-4 text-gray-500">15 Jan 2025</td>
-                    <td class="p-4">
-                        <div class="flex space-x-2">
-                            <button class="p-1.5 bg-blue-50 text-primary rounded hover:bg-blue-100" title="Lihat Detail">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Hapus">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                <?php foreach ($data['pelanggans'] as $pelanggan): ?>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4"><?= $pelanggan['nama'] ?></td>
+                        <td class="p-4"><?= $pelanggan['email'] ?></td>
+                        <td class="p-4"><?= $pelanggan['no_hp'] ?></td>
+                        <td class="p-4">
+                            <?= substr($pelanggan['alamat'], 0, 20) . (strlen($pelanggan['alamat']) > 20 ? '...' : '') ?>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex space-x-2">
+                                <button class="p-1.5 bg-blue-50 text-primary rounded hover:bg-blue-100" title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Hapus">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -93,78 +106,6 @@
                 <button class="px-3 py-1.5 text-sm rounded border border-gray-200 hover:border-primary hover:bg-blue-50">
                     <i class="fas fa-chevron-right"></i>
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Customer Modal -->
-    <div id="customerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30 hidden">
-        <div class="bg-white rounded-lg shadow-lg max-w-lg w-full max-h-90vh overflow-y-auto">
-            <div class="flex justify-between items-center border-b p-4">
-                <h3 class="text-lg font-bold">Tambah Pelanggan Baru</h3>
-                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="p-4">
-                <form>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">Nama Depan</label>
-                            <input type="text" id="firstName" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Nama depan">
-                        </div>
-                        <div>
-                            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Nama Belakang</label>
-                            <input type="text" id="lastName" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Nama belakang">
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="email@contoh.com">
-                    </div>
-                    <div class="mb-4">
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
-                        <input type="text" id="phone" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="08xx-xxxx-xxxx">
-                    </div>
-                    <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <textarea id="address" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Alamat lengkap..."></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label for="membership" class="block text-sm font-medium text-gray-700 mb-1">Keanggotaan</label>
-                        <select id="membership" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
-                            <option value="regular">Regular</option>
-                            <option value="silver">Silver</option>
-                            <option value="gold">Gold</option>
-                            <option value="platinum">Platinum</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <div class="flex space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="active" class="w-4 h-4 text-primary focus:ring-primary" checked>
-                                <span class="ml-2">Aktif</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="inactive" class="w-4 h-4 text-primary focus:ring-primary">
-                                <span class="ml-2">Tidak Aktif</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Tambahan</label>
-                        <textarea rows="2" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Catatan tambahan..."></textarea>
-                    </div>
-                    <div class="flex space-x-3 justify-end">
-                        <button type="button" id="cancelAddCustomer" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600">
-                            Simpan Pelanggan
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
