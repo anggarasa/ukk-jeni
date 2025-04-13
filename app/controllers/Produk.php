@@ -9,10 +9,23 @@ class Produk  extends Controller
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($page - 1) * $limit;
 
+        $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : null;
+
         $produkModel = $this->model('ProdukModel');
-        $data['produks'] = $produkModel->getPaginated($limit, $offset);
-        $data['total_pages'] = ceil($produkModel->countAll() / $limit); // Hitung total halaman
+
+        if ($keyword) {
+            // Jika ada kata kunci pencarian
+            $data['produks'] = $produkModel->search($keyword, $limit, $offset);
+            $totalData = $produkModel->countSearchResults($keyword);
+        } else {
+            // Default tanpa pencarian
+            $data['produks'] = $produkModel->getPaginated($limit, $offset);
+            $totalData = $produkModel->countAll();
+        }
+
+        $data['total_pages'] = ceil($totalData / $limit);
         $data['current_page'] = $page;
+        $data['keyword'] = $keyword; // Untuk mempertahankan keyword di input
 
         $this->view('produk/index', $data);
     }

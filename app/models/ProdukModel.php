@@ -63,4 +63,42 @@ class ProdukModel
         $this->db->bind(':offset', $offset, \PDO::PARAM_INT);
         return $this->db->resultSet();
     }
+
+    // ProdukModel.php
+    public function search($keyword, $limit, $offset)
+    {
+        $query = "
+        SELECT *
+        FROM produk
+        WHERE nama_produk LIKE :keyword
+           OR harga_produk LIKE :keyword
+           OR stok LIKE :keyword
+           OR terjual LIKE :keyword
+        ORDER BY id DESC
+        LIMIT :limit OFFSET :offset
+    ";
+        $this->db->query($query);
+        $this->db->bind(':keyword', '%' . $keyword . '%');
+        $this->db->bind(':limit', $limit, \PDO::PARAM_INT);
+        $this->db->bind(':offset', $offset, \PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
+    public function countSearchResults($keyword)
+    {
+        $query = "
+        SELECT COUNT(*) as total
+        FROM produk
+        WHERE nama_produk LIKE :keyword
+           OR harga_produk LIKE :keyword
+           OR stok LIKE :keyword
+           OR terjual LIKE :keyword
+    ";
+        $this->db->query($query);
+        $this->db->bind(':keyword', '%' . $keyword . '%');
+
+        $result = $this->db->single();
+        return $result['total'];
+    }
 }
