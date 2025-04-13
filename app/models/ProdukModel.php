@@ -42,4 +42,15 @@ class ProdukModel
         $this->db->bind('stok', $data['stok']);
         return $this->db->execute();
     }
+
+    public function update($data)
+    {
+        $query = "UPDATE produk SET nama_produk = :nama_produk, harga_produk = :harga_produk, stok = :stok WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind('id', $data['id']);
+        $this->db->bind('nama_produk', $data['nama_produk']);
+        $this->db->bind('harga_produk', $data['harga_produk']);
+        $this->db->bind('stok', $data['stok']);
+        return $this->db->execute();
+    }
 }

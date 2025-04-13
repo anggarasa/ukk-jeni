@@ -63,9 +63,9 @@
                     <td class="p-4"><?= $produk['terjual'] ?></td>
                     <td class="p-4">
                         <div class="flex space-x-2">
-                            <button class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
+                            <a href="<?= BASE_URL ?>/produk/edit/<?= $produk['id'] ?>" class="p-1.5 bg-gray-50 text-gray-600 rounded hover:bg-gray-100" title="Edit">
                                 <i class="fas fa-edit"></i>
-                            </button>
+                            </a>
                             <button class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Hapus">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
