@@ -389,9 +389,6 @@
                 .then(data => {
                     if (data.status === 'success') {
                         showAlert('Transaksi berhasil disimpan', 'success');
-                        setTimeout(() => {
-                            window.location.href = `/transaksi/detail/${data.transaksi_id}`;
-                        }, 1500);
                     } else {
                         showAlert(data.message, 'error');
                     }
