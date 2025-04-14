@@ -37,13 +37,13 @@ function is_active($path) {
                     </a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>/transaksi/index" class="flex items-center p-3 rounded-lg <?= is_active('transaksi') ? 'text-primary bg-blue-50 font-medium' : 'text-gray-600 hover:bg-gray-100' ?>">
+                    <a href="<?= BASE_URL ?>/transaksi" class="flex items-center p-3 rounded-lg <?= is_active('transaksi') ? 'text-primary bg-blue-50 font-medium' : 'text-gray-600 hover:bg-gray-100' ?>">
                         <i class="fas fa-shopping-cart w-5 h-5 mr-3"></i>
                         <span>Transaksi Baru</span>
                     </a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>/riwayat/transaksi" class="flex items-center p-3 rounded-lg <?= is_active('riwayat/transaksi') ? 'text-primary bg-blue-50 font-medium' : 'text-gray-600 hover:bg-gray-100' ?>">
+                    <a href="<?= BASE_URL ?>/riwayat" class="flex items-center p-3 rounded-lg <?= is_active('riwayat/transaksi') ? 'text-primary bg-blue-50 font-medium' : 'text-gray-600 hover:bg-gray-100' ?>">
                         <i class="fas fa-history w-5 h-5 mr-3"></i>
                         <span>Riwayat Transaksi</span>
                     </a>
