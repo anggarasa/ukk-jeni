@@ -43,12 +43,12 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-<div class="flex min-h-screen">
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+<div class="flex min-h-screen max-w-full">
     <!-- Sidebar -->
     <?php require_once 'sidebar.php'?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-0 md:ml-64">
+    <div class="flex-1 w-full ml-0 md:ml-64"">
         <!-- Top Bar -->
         <?php require_once 'navbar.php'?>
