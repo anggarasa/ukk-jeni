@@ -10,6 +10,7 @@ class Riwayat extends Controller
 
         $limit = 5; // Jumlah data per halaman
 
+        $data['keyword'] = ''; // Tambahkan ini
         $data['transaksis'] = $this->model('RiwayatModel')->getTransaksiPaginated($page, $limit);
         $data['total_data'] = $this->model('RiwayatModel')->getTotalTransaksi();
         $data['total_pages'] = ceil($data['total_data'] / $limit);
@@ -48,4 +49,23 @@ class Riwayat extends Controller
             ]);
         }
     }
+
+    public function search()
+    {
+        $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : '';
+        $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+
+        if ($page < 1) $page = 1;
+
+        $limit = 5; // Jumlah data per halaman
+
+        $data['keyword'] = $keyword;
+        $data['transaksis'] = $this->model('RiwayatModel')->searchTransaksi($keyword, $page, $limit);
+        $data['total_data'] = $this->model('RiwayatModel')->getTotalSearchTransaksi($keyword);
+        $data['total_pages'] = ceil($data['total_data'] / $limit);
+        $data['current_page'] = $page;
+
+        $this->view('riwayat/index', $data);
+    }
+
 }

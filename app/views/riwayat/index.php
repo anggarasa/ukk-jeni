@@ -30,15 +30,22 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Riwayat Transaksi</h1>
-        <div class="flex flex-col sm:flex-row gap-3">
+        <form action="<?= BASE_URL ?>/riwayat/search" method="post" class="flex flex-col sm:flex-row gap-3">
             <div class="relative">
-                <input type="text" placeholder="Cari transaksi..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-64">
+                <input type="text" name="keyword" placeholder="Cari transaksi..."
+                       value="<?= isset($data['keyword']) ? $data['keyword'] : '' ?>"
+                       class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-64">
                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
-            <button class="bg-blue-600 px-4 py-2 text-center text-white rounded-lg hover:bg-blue-500">
+            <button type="submit" class="bg-blue-600 px-4 py-2 text-center text-white rounded-lg hover:bg-blue-500">
                 Cari
             </button>
-        </div>
+            <?php if(isset($data['keyword']) && !empty($data['keyword'])): ?>
+                <a href="<?= BASE_URL ?>/riwayat" class="bg-gray-500 px-4 py-2 text-center text-white rounded-lg hover:bg-gray-400">
+                    Reset
+                </a>
+            <?php endif; ?>
+        </form>
     </div>
 
     <!-- Table for desktop -->
@@ -73,71 +80,59 @@
             </tbody>
         </table>
         <!-- Pagination -->
-        <div class="flex items-center justify-between px-6 py-3 bg-white border-t border-gray-200">
-            <div class="flex-1 flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Menampilkan
-                        <span class="font-medium"><?= max(1, (($data['current_page'] - 1) * 10) + 1) ?></span>
-                        sampai
-                        <span class="font-medium"><?= min($data['current_page'] * 10, $data['total_data']) ?></span>
-                        dari
-                        <span class="font-medium"><?= $data['total_data'] ?></span>
-                        hasil
-                    </p>
-                </div>
-                <div>
-                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <?php if ($data['current_page'] > 1): ?>
-                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] - 1 ?>"
-                               class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                </svg>
+        <?php if($data['total_pages'] > 1): ?>
+            <div class="flex justify-center mt-6">
+                <div class="inline-flex rounded-md shadow-sm">
+                    <?php if($data['current_page'] > 1): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $data['current_page'] - 1 ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">
+                                    &laquo; Sebelumnya
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] - 1 ?>" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">
+                                &laquo; Sebelumnya
                             </a>
                         <?php endif; ?>
+                    <?php endif; ?>
 
-                        <?php
-                        $start = max(1, $data['current_page'] - 2);
-                        $end = min($data['total_pages'], $data['current_page'] + 2);
-
-                        if ($start > 1): ?>
-                            <a href="<?= BASE_URL ?>/riwayat/index/1" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</a>
-                            <?php if ($start > 2): ?>
-                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
-                            <?php endif; ?>
-                        <?php endif; ?>
-
-                        <?php for ($i = $start; $i <= $end; $i++): ?>
-                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $i ?>"
-                               class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <?= $i === $data['current_page'] ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' ?>">
+                    <?php for($i = 1; $i <= $data['total_pages']; $i++): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post" class="inline">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $i ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium <?= $i == $data['current_page'] ? 'text-blue-700 bg-blue-100' : 'text-gray-700 bg-white' ?> border border-gray-300 hover:bg-gray-50">
+                                    <?= $i ?>
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $i ?>" class="px-3 py-2 text-sm font-medium <?= $i == $data['current_page'] ? 'text-blue-700 bg-blue-100' : 'text-gray-700 bg-white' ?> border border-gray-300 hover:bg-gray-50">
                                 <?= $i ?>
                             </a>
-                        <?php endfor; ?>
-
-                        <?php if ($end < $data['total_pages']): ?>
-                            <?php if ($end < $data['total_pages'] - 1): ?>
-                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
-                            <?php endif; ?>
-                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['total_pages'] ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"><?= $data['total_pages'] ?></a>
                         <?php endif; ?>
+                    <?php endfor; ?>
 
-                        <?php if ($data['current_page'] < $data['total_pages']): ?>
-                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] + 1 ?>"
-                               class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 
-
-0z" clip-rule="evenodd" />
-                                </svg>
+                    <?php if($data['current_page'] < $data['total_pages']): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $data['current_page'] + 1 ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">
+                                    Selanjutnya &raquo;
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] + 1 ?>" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">
+                                Selanjutnya &raquo;
                             </a>
                         <?php endif; ?>
-                    </nav>
+                    <?php endif; ?>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Card view for mobile -->
@@ -178,54 +173,59 @@
             </div>
         <?php endforeach; ?>
         <!-- Pagination -->
-        <div class="flex justify-center">
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <?php if ($data['current_page'] > 1): ?>
-                    <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] - 1 ?>"
-                       class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <span class="sr-only">Previous</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                <?php endif; ?>
-
-                <?php
-                $start = max(1, $data['current_page'] - 2);
-                $end = min($data['total_pages'], $data['current_page'] + 2);
-
-                if ($start > 1): ?>
-                    <a href="<?= BASE_URL ?>/riwayat/index/1" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</a>
-                    <?php if ($start > 2): ?>
-                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+        <?php if($data['total_pages'] > 1): ?>
+            <div class="flex justify-center mt-6">
+                <div class="inline-flex rounded-md shadow-sm">
+                    <?php if($data['current_page'] > 1): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $data['current_page'] - 1 ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">
+                                    &laquo; Sebelumnya
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] - 1 ?>" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">
+                                &laquo; Sebelumnya
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
 
-                <?php for ($i = $start; $i <= $end; $i++): ?>
-                    <a href="<?= BASE_URL ?>/riwayat/index/<?= $i ?>"
-                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <?= $i === $data['current_page'] ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50' ?>">
-                        <?= $i ?>
-                    </a>
-                <?php endfor; ?>
+                    <?php for($i = 1; $i <= $data['total_pages']; $i++): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post" class="inline">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $i ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium <?= $i == $data['current_page'] ? 'text-blue-700 bg-blue-100' : 'text-gray-700 bg-white' ?> border border-gray-300 hover:bg-gray-50">
+                                    <?= $i ?>
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $i ?>" class="px-3 py-2 text-sm font-medium <?= $i == $data['current_page'] ? 'text-blue-700 bg-blue-100' : 'text-gray-700 bg-white' ?> border border-gray-300 hover:bg-gray-50">
+                                <?= $i ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endfor; ?>
 
-                <?php if ($end < $data['total_pages']): ?>
-                    <?php if ($end < $data['total_pages'] - 1): ?>
-                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                    <?php if($data['current_page'] < $data['total_pages']): ?>
+                        <?php if(!empty($data['keyword'])): ?>
+                            <form action="<?= BASE_URL ?>/riwayat/search" method="post">
+                                <input type="hidden" name="keyword" value="<?= $data['keyword'] ?>">
+                                <input type="hidden" name="page" value="<?= $data['current_page'] + 1 ?>">
+                                <button type="submit" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">
+                                    Selanjutnya &raquo;
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] + 1 ?>" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">
+                                Selanjutnya &raquo;
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
-                    <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['total_pages'] ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"><?= $data['total_pages'] ?></a>
-                <?php endif; ?>
-
-                <?php if ($data['current_page'] < $data['total_pages']): ?>
-                    <a href="<?= BASE_URL ?>/riwayat/index/<?= $data['current_page'] + 1 ?>"
-                       class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <span class="sr-only">Next</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                <?php endif; ?>
-            </nav>
-        </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- Modal Detail -->
