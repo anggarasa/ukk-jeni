@@ -73,4 +73,24 @@ class Database
     public function rowCount() {
         return $this->stmt->rowCount();
     }
+
+    // Metode untuk memulai transaksi
+    public function beginTransaction() {
+        return $this->dbh->beginTransaction();
+    }
+
+    // Metode untuk commit transaksi
+    public function commit() {
+        return $this->dbh->commit();
+    }
+
+    // Metode untuk rollback transaksi
+    public function rollBack() {
+        return $this->dbh->rollBack();
+    }
+
+    // Metode untuk mendapatkan ID terakhir yang di-insert
+    public function lastInsertId() {
+        return $this->dbh->lastInsertId();
+    }
 }
