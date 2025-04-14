@@ -2,9 +2,19 @@
 
 class Riwayat extends Controller
 {
-    public function index()
+    public function index($page = 1)
     {
-        $data['transaksis'] = $this->model('RiwayatModel')->getAllTransaksi();
+        // Convert $page ke integer dan pastikan minimal 1
+        $page = (int)$page;
+        if ($page < 1) $page = 1;
+
+        $limit = 5; // Jumlah data per halaman
+
+        $data['transaksis'] = $this->model('RiwayatModel')->getTransaksiPaginated($page, $limit);
+        $data['total_data'] = $this->model('RiwayatModel')->getTotalTransaksi();
+        $data['total_pages'] = ceil($data['total_data'] / $limit);
+        $data['current_page'] = $page;
+
         $this->view('riwayat/index', $data);
     }
 

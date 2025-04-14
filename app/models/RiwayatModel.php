@@ -21,15 +21,10 @@ class RiwayatModel
                             t.uang_diberikan,
                             t.total_harga,
                             t.kembalian,
-                            p.nama as nama_pelanggan,
-                            pr.nama_produk as nama_produk,
-                            dt.jumlah,
-                            dt.subtotal
+                            p.nama as nama_pelanggan
                           FROM transaksi t
                           JOIN pelanggan p ON t.pelanggan_id = p.id
-                          JOIN detail_transaksi dt ON dt.transaksi_id = t.id
-                          JOIN produk pr ON dt.produk_id = pr.id
-                          ORDER BY t.tgl_transaksi DESC');
+                          ORDER BY t.id DESC');
         return $this->db->resultSet();
     }
 
@@ -55,6 +50,35 @@ class RiwayatModel
                       JOIN produk pr ON dt.produk_id = pr.id
                       WHERE t.id = :transaksi_id');
         $this->db->bind(':transaksi_id', (int)$transaksi_id);
-        return $this->db->resultSet(); // Gunakan resultSet() bukan single() untuk mendapatkan semua item
+        return $this->db->resultSet();
+    }
+
+    public function getTransaksiPaginated($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+
+        $this->db->query('SELECT 
+                        t.id as transaksi_id,
+                        t.tgl_transaksi,
+                        t.uang_diberikan,
+                        t.total_harga,
+                        t.kembalian,
+                        p.nama as nama_pelanggan
+                      FROM transaksi t
+                      JOIN pelanggan p ON t.pelanggan_id = p.id
+                      ORDER BY t.id DESC
+                      LIMIT :limit OFFSET :offset');
+
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':offset', $offset);
+
+        return $this->db->resultSet();
+    }
+
+    public function getTotalTransaksi()
+    {
+        $this->db->query('SELECT COUNT(t.id) as total FROM transaksi t
+                      JOIN pelanggan p ON t.pelanggan_id = p.id');
+        return $this->db->single()['total'];
     }
 }
