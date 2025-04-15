@@ -15,30 +15,30 @@
 
     <!-- Page Content -->
     <main x-data="{
-                    show: false,
-                    pelanggan: null,
-                    show()\n        showModal(id) {
-                        this.show = true;
-                        this.fetchDetail(id);
-                    },
-                    fetchDetail(id) {
-                        fetch(`<?= BASE_URL ?>/pelanggan/detail/${id}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    this.pelanggan = data.data;
-                                } else {
-                                    alert(data.message);
-                                    this.show = false;
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching detail:', error);
-                                alert('Gagal mengambil data pelanggan.');
-                                this.show = false;
-                            });
+        show: false,
+        pelanggan: null,
+        showModal(id) {
+            this.show = true;
+            this.fetchDetail(id);
+        },
+        fetchDetail(id) {
+            fetch(`<?= BASE_URL ?>/pelanggan/detail/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.pelanggan = data.data;
+                    } else {
+                        alert(data.message);
+                        this.show = false;
                     }
-                }" class="p-4 md:p-6">
+                })
+                .catch(error => {
+                    console.error('Error fetching detail:', error);
+                    alert('Gagal mengambil data pelanggan.');
+                    this.show = false;
+                });
+        }
+     }" class="p-4 md:p-6">
         <!-- Header & Actions -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
             <div>
@@ -112,30 +112,6 @@
                                 </div>
                             </td>
                         </tr>
-
-                        <!-- Modal Detail -->
-                        <div x-show="show"
-                             class="fixed z-50 inset-0 flex items-center justify-center bg-transparent" style="display: none;">
-                            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <h2 class="text-lg font-medium text-gray-700">Detail Pelanggan</h2>
-                                    <button @click="show = false" class="text-gray-500 hover:text-gray-700">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                <div class="space-y-2">
-                                    <p><strong>Nama:</strong> <span x-text="pelanggan?.nama || '-'"></span></p>
-                                    <p><strong>Email:</strong> <span x-text="pelanggan?.email || '-'"></span></p>
-                                    <p><strong>No. Telepon:</strong> <span x-text="pelanggan?.no_hp || '-'"></span></p>
-                                    <p><strong>Alamat:</strong> <span x-text="pelanggan?.alamat || '-'"></span></p>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button @click="show = false" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                                        Tutup
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -167,6 +143,42 @@
                     <?php endif; ?>
                 </ul>
             </nav>
+        </div>
+
+        <!-- Modal Detail Pelanggan -->
+        <div x-show="show" class="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center" style="display: none;">
+            <div class="fixed inset-0 bg-black opacity-50"></div>
+            <div class="relative bg-white rounded-lg max-w-md w-full mx-auto shadow-lg z-50">
+                <div class="px-6 py-4 border-b">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Detail Pelanggan</h3>
+                        <button @click="show = false" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6" x-show="pelanggan">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Nama</p>
+                        <p class="font-semibold" x-text="pelanggan?.nama"></p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Email</p>
+                        <p class="font-semibold" x-text="pelanggan?.email || '-'"></p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">No. Telepon</p>
+                        <p class="font-semibold" x-text="pelanggan?.no_hp"></p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Alamat</p>
+                        <p class="font-semibold" x-text="pelanggan?.alamat || '-'"></p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t bg-gray-50 flex justify-end">
+                    <button @click="show = false" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium">Tutup</button>
+                </div>
+            </div>
         </div>
     </main>
 <?php require_once '../app/views/layouts/footer.php'?>
