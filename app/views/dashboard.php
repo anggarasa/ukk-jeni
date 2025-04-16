@@ -17,7 +17,7 @@
                 </span>
                 </div>
                 <div class="flex items-center">
-                    <h2 class="text-2xl font-bold">Rp <?= number_format($data['total_pendapatan']['total_pendapatan'], 0, ',', '.') ?></h2>
+                    <h2 class="text-2xl font-bold">Rp <?= number_format($data['total_pendapatan'], 0, ',', '.') ?></h2>
                 </div>
             </div>
 
