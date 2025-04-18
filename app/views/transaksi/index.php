@@ -1,7 +1,7 @@
 <?php require_once '../app/views/layouts/header.php'?>
 
 <!-- Main Content -->
-<main class="flex-grow container mx-auto px-4 py-6">
+<main class="flex-grow bg-gradient-to-br from-blue-50 to-indigo-50 container mx-auto px-4 py-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Transaksi Baru</h2>
         <p class="text-gray-600">Isi detail transaksi pelanggan</p>
@@ -378,7 +378,7 @@
             };
 
             // Send transaction to server
-            fetch('/ukk-jeni/public/transaksi/create', {
+            fetch('http://ukk-jeni.test/transaksi/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

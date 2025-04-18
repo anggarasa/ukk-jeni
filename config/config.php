@@ -2,7 +2,7 @@
 
 
 // Ubah ini sesuai lokasi proyek kamu di localhost atau hosting
-define('BASE_URL', 'http://localhost:8000/ukk-jeni/public');
+define('BASE_URL', 'http://ukk-jeni.test');
 
 // Konfigurasi database
 define('DB_HOST', 'localhost');

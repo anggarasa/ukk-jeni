@@ -28,7 +28,8 @@ class DashboardModel
     {
         // Asumsi ada tabel 'detail_transaksi' dengan kolom 'jumlah'
         $this->db->query("SELECT SUM(jumlah) as produk_terjual FROM detail_transaksi");
-        return $this->db->single();
+        $result = $this->db->single();
+        return $result['produk_terjual'] ?? 0;
     }
 
     public function getJumlahPelangganBaru()
